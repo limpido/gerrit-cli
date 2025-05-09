@@ -8,19 +8,19 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(pushCmd)
+	rootCmd.AddCommand(branchCmd)
 }
 
-var pushCmd = &cobra.Command{
-	Use:   "push",
+var branchCmd = &cobra.Command{
+	Use:   "branch",
 	Short: "Print the version number of Hugo",
 	Long:  `All software has versions. This is Hugo's`,
-	Args:  cobra.NoArgs,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		origin := util.GitOrigin()
 		upstream := util.GitUpstream()
-		util.Execute("git commit --amend --no-edit -s")
-		c := fmt.Sprintf("git push %s HEAD:refs/for/%s", origin, upstream)
-		util.Execute(c)
+		util.Execute(fmt.Sprintf("git checkout %s", upstream))
+		util.Execute(fmt.Sprintf("git checkout -b %s", branch))
+		util.Execute(fmt.Sprintf("git branch -u %s/%s", origin, upstream))
 	},
 }

@@ -13,9 +13,8 @@ func init() {
 }
 
 var downloadCmd = &cobra.Command{
-	Use:   "download",
-	Short: "Print the version number of Hugo",
-	Long:  `All software has versions. This is Hugo's`,
+	Use:   "download <commit> ...",
+	Short: "Download the specified commit from remote to current branch.",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		repoUrl := util.GitRepoUrl()

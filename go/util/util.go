@@ -71,5 +71,9 @@ func Query(commit string) string {
 	server := GitServer()
 	cmd := fmt.Sprintf("ssh %s gerrit query %s --current-patch-set --format JSON", server, commit)
 	res := Execute(cmd)
+	strs := strings.Split(res, "\n")
+	if len(strs) < 2 {
+		LogFatal(fmt.Sprintf("error: unable to find commit %s", commit))
+	}
 	return strings.Split(res, "\n")[0]
 }

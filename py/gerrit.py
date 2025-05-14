@@ -63,6 +63,9 @@ def query(commit):
     res = execute(
         f"ssh {server} gerrit query {commit} --current-patch-set --format JSON"
     )
+    strs = res.splitlines()
+    if len(strs) < 2:
+        perror(f"error: unable to find commit {commit}")
     return res.splitlines()[0]
 
 
@@ -86,7 +89,7 @@ def push():
 @click.argument("commits", nargs=-1)
 def download(commits: tuple[str, ...]):
     """
-    Cherrypick the specified patch from remote to current branch.
+    Download the specified commit from remote to current branch.
     """
     repo_url = git_repo_url()
     for commit in commits:

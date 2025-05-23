@@ -12,9 +12,9 @@ func Execute(cmd string) string {
 	cmd_arr := strings.Split(cmd, " ")
 	name := cmd_arr[0]
 	args := cmd_arr[1:]
-	out, err := exec.Command(name, args...).Output()
+	out, err := exec.Command(name, args...).CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		LogFatal(string(out[:]))
 	}
 	s := string(out[:])
 	s = strings.TrimSpace(s)
@@ -23,7 +23,8 @@ func Execute(cmd string) string {
 }
 
 func LogFatal(msg string) {
-	log.Fatalln("\033[91;1m", msg, "\033[0m")
+	log.SetFlags(0)
+	log.Fatal("\033[91;1m", msg, "\033[0m")
 }
 
 func GitHead() string {

@@ -82,7 +82,7 @@ def push():
     origin = git_origin()
     upstream = git_upstream()
     execute("git commit --amend --no-edit -s")
-    execute(f"git push {origin} HEAD:refs/for/{upstream}")
+    execute(f"git push {origin} HEAD:refs/for/{upstream} --no-thin")
 
 
 @cli.command()

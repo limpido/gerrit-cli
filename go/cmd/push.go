@@ -13,8 +13,9 @@ func init() {
 
 var pushCmd = &cobra.Command{
 	Use:   "push",
-	Short: "Amend the HEAD commit and push.",
+	Short: "Amend the HEAD commit and push",
 	Args:  cobra.NoArgs,
+	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		origin := util.GitOrigin()
 		upstream := util.GitUpstream()

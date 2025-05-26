@@ -12,9 +12,10 @@ func init() {
 }
 
 var branchCmd = &cobra.Command{
-	Use:   "branch <new-branch>",
-	Short: "Checkout a new branch based on and tracking upstream.",
+	Use:   "branch <new_branch>",
+	Short: "Checkout a new branch based on and tracking upstream",
 	Args:  cobra.ExactArgs(1),
+	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		origin := util.GitOrigin()
 		upstream := util.GitUpstream()

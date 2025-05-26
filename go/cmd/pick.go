@@ -12,9 +12,10 @@ func init() {
 }
 
 var pickCmd = &cobra.Command{
-	Use:   "pick <branch> ...",
-	Short: "Cherrypick HEAD commit to the specified branches on remote server.",
+	Use:   "pick <branch> [<branch>...]",
+	Short: "Cherrypick HEAD commit to the specified branch(es) on remote server",
 	Args:  cobra.MinimumNArgs(1),
+	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		head := util.GitHead()
 		origin := util.GitOrigin()

@@ -13,15 +13,16 @@ func init() {
 }
 
 var downloadCmd = &cobra.Command{
-	Use:   "download <commit> ...",
-	Short: "Download the specified commit from remote to current branch.",
+	Use:   "download <change> [<change>...]",
+	Short: "Download the specified change(s) from remote to current branch",
 	Args:  cobra.MinimumNArgs(1),
+	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		repoUrl := util.GitRepoUrl()
-		for _, commit := range args {
+		for _, change := range args {
 			var resp map[string]json.RawMessage
 			var curPatchSet map[string]json.RawMessage
-			json.Unmarshal([]byte(util.Query(commit)), &resp)
+			json.Unmarshal([]byte(util.Query(change)), &resp)
 			json.Unmarshal([]byte(resp["currentPatchSet"]), &curPatchSet)
 			ref := curPatchSet["ref"]
 			util.Execute(fmt.Sprintf("git fetch %s %s", repoUrl, ref))

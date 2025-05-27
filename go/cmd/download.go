@@ -22,9 +22,10 @@ var downloadCmd = &cobra.Command{
 		for _, change := range args {
 			var resp map[string]json.RawMessage
 			var curPatchSet map[string]json.RawMessage
+			var ref string
 			json.Unmarshal([]byte(util.Query(change)), &resp)
-			json.Unmarshal([]byte(resp["currentPatchSet"]), &curPatchSet)
-			ref := curPatchSet["ref"]
+			json.Unmarshal(resp["currentPatchSet"], &curPatchSet)
+			json.Unmarshal(curPatchSet["ref"], &ref)
 			util.Execute(fmt.Sprintf("git fetch %s %s", repoUrl, ref))
 			util.Execute("git cherry-pick FETCH_HEAD")
 		}

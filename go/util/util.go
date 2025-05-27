@@ -6,12 +6,24 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"os"
 )
 
-func Execute(cmd string) string {
+func Execute(cmd string) {
 	cmd_arr := strings.Split(cmd, " ")
 	name := cmd_arr[0]
 	args := cmd_arr[1:]
+	c := exec.Command(name, args...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	c.Run()
+}
+
+func ExecuteAndReturnOutput(cmd string) string {
+	cmd_arr := strings.Split(cmd, " ")
+	name := cmd_arr[0]
+	args := cmd_arr[1:]
+
 	out, err := exec.Command(name, args...).CombinedOutput()
 	if err != nil {
 		LogFatal(string(out[:]))
@@ -28,21 +40,21 @@ func LogFatal(msg string) {
 }
 
 func GitHead() string {
-	return Execute("git rev-parse HEAD")
+	return ExecuteAndReturnOutput("git rev-parse HEAD")
 }
 
 func GitBranch() string {
-	return Execute("git rev-parse --abbrev-ref HEAD")
+	return ExecuteAndReturnOutput("git rev-parse --abbrev-ref HEAD")
 }
 
 func GitOrigin() string {
-	return Execute("git remote show")
+	return ExecuteAndReturnOutput("git remote show")
 }
 
 func GitRepoUrl() string {
 	origin := GitOrigin()
 	s := fmt.Sprint("git remote get-url ", origin)
-	return Execute(s)
+	return ExecuteAndReturnOutput(s)
 }
 
 func GitServer() string {
@@ -57,7 +69,7 @@ func GitServer() string {
 }
 
 func GitUpstream() string {
-	s := Execute("git rev-parse --abbrev-ref @{u}")
+	s := ExecuteAndReturnOutput("git rev-parse --abbrev-ref @{u}")
 	re := regexp.MustCompile("(.+?)/(.+)")
 	match := re.FindSubmatch([]byte(s))
 	if match == nil {
@@ -71,7 +83,7 @@ func GitUpstream() string {
 func Query(commit string) string {
 	server := GitServer()
 	cmd := fmt.Sprintf("ssh %s gerrit query %s --current-patch-set --format JSON", server, commit)
-	res := Execute(cmd)
+	res := ExecuteAndReturnOutput(cmd)
 	strs := strings.Split(res, "\n")
 	if len(strs) < 2 {
 		LogFatal(fmt.Sprintf("error: unable to find commit %s", commit))

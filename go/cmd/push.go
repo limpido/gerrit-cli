@@ -20,7 +20,6 @@ var pushCmd = &cobra.Command{
 		origin := util.GitOrigin()
 		upstream := util.GitUpstream()
 		util.Execute("git commit --amend --no-edit -s")
-		c := fmt.Sprintf("git push %s HEAD:refs/for/%s --no-thin", origin, upstream)
-		util.Execute(c)
+		util.Execute(fmt.Sprintf("git push %s HEAD:refs/for/%s --no-thin", origin, upstream))
 	},
 }

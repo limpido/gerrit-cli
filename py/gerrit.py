@@ -3,14 +3,13 @@ import sys
 import subprocess
 import re
 import json
-
-
-def cmd_array(cmd):
-    return cmd.split(" ")
+import shlex
 
 
 def execute(cmd):
-    p = subprocess.run(cmd_array(cmd), stdout=subprocess.PIPE)
+    s = shlex.shlex(cmd, posix=True, punctuation_chars=True)
+    s.whitespace_split = True
+    p = subprocess.run(list(s), stdout=subprocess.PIPE)
     return p.stdout.decode("utf-8").strip().rstrip("\n")
 
 
